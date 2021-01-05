@@ -44,6 +44,21 @@ class Fetch(commands.Cog):
             await ctx.send(embed=embed)
 
     @commands.command()
+    async def clearfetch(self, ctx):
+
+        user_id = str(ctx.author.id)
+
+        if user_id in self.fetchers:
+            del self.fetchers[user_id]
+
+        with open("fetchers.json", "w") as f:
+            json.dump(self.fetchers, f, indent=4)
+
+        embed = discord.Embed(title="Setfetch", color=0xea6f91)
+        embed.set_footer(text=f"{ctx.author} successfully cleared fetch!")
+        await ctx.send(embed=embed)
+
+    @commands.command()
     async def fetch(self, ctx, fetcher: discord.Member):
 
         user_id = str(ctx.author.id)
@@ -78,7 +93,6 @@ class Fetch(commands.Cog):
         if isinstance(error, commands.MissingRequiredArgument):
             user_id = str(ctx.author.id)
 
-
             try:
                 fetch_url = self.fetchers[user_id]["fetchUrl"]
                 fetch = requests.get(fetch_url)
@@ -92,6 +106,12 @@ class Fetch(commands.Cog):
                     embed.set_footer(text="No one set a fetch yet!")
                     await ctx.send(embed=embed)
                     self.fetchers = {}
+
+                if not user_id in self.fetchers:
+                    embed = discord.Embed(title="Fetch", color=0xea6f91)
+                    embed.set_footer(text="You didn't set a fetch yet!")
+                    await ctx.send(embed=embed)
+
                 else:
                     embed = discord.Embed(title="Fetch", color=0xea6f91)
                     embed.set_footer(text=f"Couldn't get your fetch!")
