@@ -1,2 +1,5 @@
+.idea
 __pycache__
+cogs/.idea
+cogs/__pycache__
 fetchers.json
