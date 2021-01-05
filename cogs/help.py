@@ -10,34 +10,49 @@ class Help(commands.Cog):
     @commands.command()
     async def help(self, ctx, helpin):
 
-        # TODO Add longer descriptions, properly describe what items do.
+        fetch_usage = {
+            "sudo fetch": "show your fetch if you set one, run: sudo help setfetch to get information about how to set your fetch",
+            "sudo fetch user": "show fetch of <user> if user set one"
+        }
 
-        if "fetch" in helpin:
+        setfetch_usage = {
+            "sudo setfetch": "set your fetch, run:\n`curl https://raw.githubusercontent.com/yrwq/kerny/main/fetch.sh | sh`\n in your terminal to get your url"
+        }
 
-            fetch_usage = {
-                "y!fetch": "show your fetch",
-                "y!fetch user": "show a user's fetch"
-            }
+        if helpin == "fetch":
 
             embed = discord.Embed(title="Fetch", color=0xea6f91)
-            embed.add_field(name="y!fetch", value=fetch_usage.get("y!fetch"), inline=False)
-            embed.add_field(name="y!fetch user", value=fetch_usage.get("y!fetch user"), inline=False)
+            embed.add_field(name="`sudo fetch`", value=fetch_usage.get("sudo fetch"), inline=False)
+            embed.add_field(name="`sudo fetch <user>`", value=fetch_usage.get("sudo fetch user"), inline=False)
+            await ctx.send(embed=embed)
+
+        elif helpin == "setfetch":
+
+            embed = discord.Embed(title="Setfetch", color=0xea6f91)
+            embed.add_field(name="sudo setfetch <url>", value=setfetch_usage.get("sudo setfetch"), inline=False)
+            await ctx.send(embed=embed)
+
+        else:
+
+            embed = discord.Embed(title="Help", color=0xea6f91)
+            embed.add_field(name=f"{helpin} not found!", value="Run: `sudo help` to get available commands!", inline=False)
             await ctx.send(embed=embed)
 
     @help.error
     async def help_error(self, ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
             all_commands = {
-                "y!fetch": "show your fetch",
-                "y!fetch user": "show a user's fetch",
-                "y!setfetch": "set your fetch url"
+                "sudo fetch": "show your fetch if you set one",
+                "sudo fetch user": "show fetch of <user> if user set one",
+                "sudo setfetch": "set your fetch using"
             }
 
             embed = discord.Embed(title="Help", color=0xea6f91)
 
-            embed.add_field(name="y!fetch", value=all_commands.get("y!fetch"), inline=False)
-            embed.add_field(name="y!fetch user", value=all_commands.get("y!fetch user"), inline=False)
-            embed.add_field(name="y!setfetch", value=all_commands.get("y!setfetch"), inline=False)
+            embed.add_field(name="sudo fetch", value=all_commands.get("sudo fetch"), inline=False)
+            embed.add_field(name="sudo fetch <user>", value=all_commands.get("sudo fetch user"), inline=False)
+            embed.add_field(name="sudo setfetch <url>", value=all_commands.get("sudo setfetch"), inline=False)
+            embed.set_footer(text="run: sudo help <command> to get more information.")
 
             await ctx.send(embed=embed)
 
