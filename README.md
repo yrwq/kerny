@@ -1,9 +1,9 @@
 ## Introduction
 
 <p align="center">
-<a href="https://python.org"><img src="https://ForTheBadge.com/images/badges/made-with-python.svg"></a>
+<img src="https://ForTheBadge.com/images/badges/made-with-python.svg">
 <br>
-<a href="https://makepullrequest.com"><img src="https://img.shields.io/badge/PRs-welcome-purple.svg?style=for-the-badge"></a>
+<img src="https://img.shields.io/badge/PRs-welcome-purple.svg?style=for-the-badge">
 </p>
 
 Kerny is just another Discord bot ... Written in python, for your shitty discord server!
