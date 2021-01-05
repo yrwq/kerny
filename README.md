@@ -1,6 +1,6 @@
 ## Introduction
 
-[![forthebadge-made-with-python](https://ForTheBadge.com/images/badges/made-with-python.sg)](https://www.python.org/)
+[![forthebadge-made-with-python](https://ForTheBadge.com/images/badges/made-with-python.svg)](https://www.python.org/)
 [![PR's welcome](https://img.shields.io/badge/PRs-welcome-purple.svg?style=for-the-badge)](https://makepullrequest.com)
 
 Kerny is just another Discord bot ... Written in python, for your shitty discord server!
@@ -36,7 +36,13 @@ Kerny is just another Discord bot ... Written in python, for your shitty discord
     echo 'export DISCORD_TOKEN="yourtoken"' >> ~/.zshrc
     ```
 
-    4. Edit `bot.py` to match your token
+    4. Install python dependencies
+
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+    5. Edit `bot.py` to match your token
 
     - Remove the uncommented line that starts with TOKEN_AUTH
 
