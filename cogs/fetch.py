@@ -78,11 +78,6 @@ class Fetch(commands.Cog):
         if isinstance(error, commands.MissingRequiredArgument):
             user_id = str(ctx.author.id)
 
-            if not self.fetchers:
-                embed = discord.Embed(title="Fetch", color=0xea6f91)
-                embed.set_footer(text="No one set a fetch yet!")
-                await ctx.send(embed=embed)
-                self.fetchers = {}
 
             try:
                 fetch_url = self.fetchers[user_id]["fetchUrl"]
@@ -90,37 +85,17 @@ class Fetch(commands.Cog):
                 embed = discord.Embed(title="Fetch", color=0xea6f91)
                 embed.set_footer(text=f"{fetch.text}")
                 await ctx.send(embed=embed)
+
             except:
-                embed = discord.Embed(title="Fetch", color=0xea6f91)
-                embed.set_footer(text=f"Couldn't get your fetch!")
-                await ctx.send(embed=embed)
-
-    @commands.command()
-    async def clearfetch(self, ctx):
-
-        user_id = str(ctx.author.id)
-
-        if not self.fetchers:
-            embed = discord.Embed(title="Clearfetch", color=0xea6f91)
-            embed.set_footer(text="No one set a fetch yet!")
-            await ctx.send(embed=embed)
-            self.fetchers = {}
-
-        if not user_id in self.fetchers:
-            embed = discord.Embed(title="Clearfetch", color=0xea6f91)
-            embed.set_footer(text="You didn't set a fetch yet!")
-            await ctx.send(embed=embed)
-
-        if user_id in self.fetchers:
-
-            self.fetchers[user_id] = ""
-
-            with open("fetchers.json", "w") as f:
-                json.dump(self.fetchers, f, indent=4)
-
-            embed = discord.Embed(title="Clearfetch", color=0xea6f91)
-            embed.set_footer(text="Cleared your fetch! 💔")
-            await ctx.send(embed=embed)
+                if not self.fetchers:
+                    embed = discord.Embed(title="Fetch", color=0xea6f91)
+                    embed.set_footer(text="No one set a fetch yet!")
+                    await ctx.send(embed=embed)
+                    self.fetchers = {}
+                else:
+                    embed = discord.Embed(title="Fetch", color=0xea6f91)
+                    embed.set_footer(text=f"Couldn't get your fetch!")
+                    await ctx.send(embed=embed)
 
 def setup(client):
     client.add_cog(Fetch(client))
