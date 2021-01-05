@@ -19,21 +19,21 @@ Kerny is just another Discord bot ... Written in python, for your shitty discord
 
 ### Setting up
 
-1. If you don't already have one, create a new [Discord Application](https://discord.com/developers/applications)
+1. If you don't already have one, create a new [Discord Application](https://discord.com/developers/applications).
 
-2. Clone this repository
+2. Clone this repository.
 
 ```bash
 git clone https://github.com/yrwq/kerny
 ```
 
-3. Install python dependencies
+3. Install python dependencies.
 
 ```bash
 pip install -r requirements.txt
 ```
 
-4. Edit `bot.py` to match your token
+4. Edit `bot.py` to match your token & add your Discord ID to devs list.
 
 ## Contributing
 
