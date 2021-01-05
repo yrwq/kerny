@@ -1,13 +1,16 @@
 #!/usr/bin/env python3
 import discord
 from discord.ext import commands
+from discord.ext.commands import CommandNotFound
 import os
 from os import path
 
 devs = ["yrwq#5792", "Dempy#0053"]
+
 TOKEN_AUTH = os.environ.get("DISCORD_TOKEN")
 # TOKEN_AUTH = "token"
-client = commands.Bot(command_prefix='y!')
+
+client = commands.Bot(command_prefix='sudo ')
 client.remove_command("help")
 
 @client.event
@@ -79,6 +82,13 @@ async def reload(ctx, extension):
 
     else:
         embed = discord.Embed(title="You are not a developer! 💖", color=0xea6f91)
+        await ctx.send(embed=embed)
+
+@client.event
+async def on_command_error(ctx, error):
+    if isinstance(error, CommandNotFound):
+        embed = discord.Embed(title="Command not found! 💔", color=0xea6f91)
+        embed.set_footer(text="For available commands, type: sudo help")
         await ctx.send(embed=embed)
 
 client.run(TOKEN_AUTH)
