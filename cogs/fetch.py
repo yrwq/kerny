@@ -17,7 +17,7 @@ class Fetch(commands.Cog):
 
         user_id = str(ctx.author.id)
 
-        valid_link = "https://0x0.st/"
+        valid_link = "0x0.st/"
 
         if not valid_link in user_input:
             embed = discord.Embed(title="Setfetch", color=0xea6f91)
