@@ -16,7 +16,7 @@ class Help(commands.Cog):
         }
 
         setfetch_usage = {
-            "sudo setfetch": "set your fetch, run:\n`curl https://raw.githubusercontent.com/yrwq/kerny/main/fetch.sh | sh`\n in your terminal to get your url"
+            "sudo setfetch": "set your fetch, run:\n`curl -Ss https://raw.githubusercontent.com/yrwq/kerny/main/fetch.sh | sh`\n in your terminal to get your url"
         }
 
         if helpin == "fetch":

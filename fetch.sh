@@ -111,6 +111,6 @@ EOF
 id=$(curl -sf -F'file=@fetch' http://0x0.st)
 
 command -v xclip >/dev/null && {
-    echo "$id copied to your clipboard!"
-    echo $id | xclip -sel clip
+    echo -ne "$id \n Copied To your clipoard!"
+    echo "sudo setfetch $id" | xclip -sel clip
 } || echo "sudo setfetch $id"
