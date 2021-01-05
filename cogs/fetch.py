@@ -61,9 +61,9 @@ class Fetch(commands.Cog):
             await ctx.send(embed=embed)
 
         if self.fetchers[fetcher_id]["fetchUrl"]:
-            fetch_url = self.fetchers[fetcher_id]["fetchUrl"]
 
             try:
+                fetch_url = self.fetchers[user_id]["fetchUrl"]
                 fetch = requests.get(fetch_url)
                 embed = discord.Embed(title="Fetch", color=0xea6f91)
                 embed.set_footer(text=f"{fetch.text}")
@@ -77,9 +77,15 @@ class Fetch(commands.Cog):
     async def fetch_error(self, ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
             user_id = str(ctx.author.id)
-            fetch_url = self.fetchers[user_id]["fetchUrl"]
+
+            if not self.fetchers:
+                embed = discord.Embed(title="Fetch", color=0xea6f91)
+                embed.set_footer(text="No one set a fetch yet!")
+                await ctx.send(embed=embed)
+                self.fetchers = {}
 
             try:
+                fetch_url = self.fetchers[user_id]["fetchUrl"]
                 fetch = requests.get(fetch_url)
                 embed = discord.Embed(title="Fetch", color=0xea6f91)
                 embed.set_footer(text=f"{fetch.text}")
