@@ -13,16 +13,30 @@ class Fetch(commands.Cog):
             self.fetchers = json.load(f)
 
     @commands.command()
-    async def setfetch(self, ctx, user_input):
+    async def setfetch(self, ctx, *, user_input):
 
         user_id = str(ctx.author.id)
 
         if not self.fetchers:
             self.fetchers = {}
 
+        # Parse fetch data
+        fetch = user_input.split("\n")
+        distro = fetch[0]
+        kernel = fetch[1]
+        terminal = fetch[2]
+        editor = fetch[3]
+        wm = fetch[4]
+        resolution = fetch[5]
+        display_prot = fetch[6]
+        gtk_theme = fetch[7]
+
+
         if not user_id in self.fetchers:
             self.fetchers[user_id] = {}
-            self.fetchers[user_id]["fetchUrl"] = user_input
+            self.fetchers[user_id]["fetch"] = [distro, kernel, terminal, editor, wm, resolution, display_prot, gtk_theme]
+            self.fetchers[user_id]["fetchImg"] = {}
+            self.fetchers[user_id]["repos"] = []
 
         with open("fetchers.json", "w") as f:
             json.dump(self.fetchers, f, indent=4)
@@ -36,21 +50,22 @@ class Fetch(commands.Cog):
 
         user_id = str(ctx.author.id)
 
-        if not self.fetchers:
-            self.fetchers = {}
+        if ctx.author == self.client.user:
+            return
 
-        if not user_id in self.fetchers:
-            self.fetchers[user_id] = {}
-
-        if user_id in self.fetchers:
+        try:
             self.fetchers[user_id]["fetchImg"] = user_input
+            embed = discord.Embed(title="Fetch", color=0xea6f91)
+            embed.set_footer(text=f"{ctx.author} successfully set a fetch image!")
+            await ctx.send(embed=embed)
+
+        except:
+            embed = discord.Embed(title="Fetch", color=0xea6f91)
+            embed.add_field(name=f"Please set a fetch first!", value=f"run:{ctx.prefix}help setfetch")
+            await ctx.send(embed=embed)
 
         with open("fetchers.json", "w") as f:
             json.dump(self.fetchers, f, indent=4)
-
-        embed = discord.Embed(title="Setimg", color=0xea6f91)
-        embed.set_footer(text=f"{ctx.author} successfully set fetch image!")
-        await ctx.send(embed=embed)
 
     @commands.command()
     async def addrepo(self, ctx, user_input):
@@ -60,23 +75,32 @@ class Fetch(commands.Cog):
         valid_link = "https://github.com"
 
         if valid_link in user_input:
+
             if ctx.author == self.client.user:
                 return
 
-            if not self.fetchers:
-                self.fetchers = {}
-
-            if not user_id in self.fetchers:
-                self.fetchers[user_id] = {}
-
-            if user_id in self.fetchers:
-                repo = self.fetchers[user_id]["repos"] = user_input
+            try:
+                repo = self.fetchers[user_id]["repos"]
+                if user_input in repo:
+                    embed = discord.Embed(title="Fetch", color=0xea6f91)
+                    embed.set_footer(text="You already added this repository!")
+                    await ctx.send(embed=embed)
+                else:
+                    repo.append(user_input)
+                    embed = discord.Embed(title="Fetch", color=0xea6f91)
+                    embed.set_footer(text=f"{ctx.author} successfully set fetch repository!")
+                    await ctx.send(embed=embed)
+            except:
+                embed = discord.Embed(title="Fetch", color=0xea6f91)
+                embed.add_field(name=f"Please set a fetch first!", value=f"run:{ctx.prefix}help setfetch")
+                await ctx.send(embed=embed)
 
             with open("fetchers.json", "w") as f:
                 json.dump(self.fetchers, f, indent=4)
 
-            embed = discord.Embed(title="Fetchrepo", color=0xea6f91)
-            embed.set_footer(text=f"{ctx.author} successfully set fetch repository!")
+        else:
+            embed = discord.Embed(title="Fetch", color=0xea6f91)
+            embed.set_footer(text="Please enter a valid github repository!")
             await ctx.send(embed=embed)
 
     @commands.command()
@@ -112,10 +136,21 @@ class Fetch(commands.Cog):
                 embed = discord.Embed(title="Fetch", color=0xea6f91)
 
                 try:
-                    fetch_url = self.fetchers[fetcher_id]["fetchUrl"]
-                    fetch = requests.get(fetch_url)
-                    embed.add_field(name="Information", value=fetch.text, inline=True)
+                    fetch = self.fetchers[fetcher_id]["fetch"]
+                    distro = fetch[0]
+                    kernel = fetch[1]
+                    terminal = fetch[2]
+                    editor = fetch[3]
+                    wm = fetch[4]
+                    resolution = fetch[5]
+                    display_prot = fetch[6]
+                    gtk_theme = fetch[7]
+                    embed.add_field(name="Information", value=f"""
+                    `Distro:` {distro}\n`Kernel:` {kernel}\n
+                    """, inline=True)
+
                 except:
+
                     embed.add_field(name="Information", value="Wow, such empty.", inline=True)
 
                 try:
@@ -125,10 +160,14 @@ class Fetch(commands.Cog):
                     embed.set_footer(text="Image not set")
 
                 try:
-                    repo_url = self.fetchers[fetcher_id]["repos"]
-                    embed.add_field(name="Highlighted repositories", value=repo_url, inline=True)
+                    repo_url = self.fetchers[user_id]["repos"]
+                    if repo_url[0] == None:
+                        embed.add_field(name="Highlighted epositories", value="Wow, such empty.", inline=True)
+                    else:
+                        embed.add_field(name="Highlighted repositories", value=repo_url, inline=True)
                 except:
                     embed.add_field(name="Highlighted epositories", value="Wow, such empty.", inline=True)
+
 
                 await ctx.send(embed=embed)
         except:
@@ -157,7 +196,11 @@ class Fetch(commands.Cog):
                     try:
                         fetch_url = self.fetchers[user_id]["fetchUrl"]
                         fetch = requests.get(fetch_url)
-                        embed.add_field(name="Information", value=fetch.text, inline=True)
+                        embed.add_field(name="Information", value=f"""
+                                        ```
+                                        {fetch.text}
+                                        ```
+                                        """, inline=True)
                     except:
                         embed.add_field(name="Information", value="Wow, such empty.", inline=True)
 
@@ -169,7 +212,11 @@ class Fetch(commands.Cog):
 
                     try:
                         repo_url = self.fetchers[user_id]["repos"]
-                        embed.add_field(name="Highlighted repositories", value=repo_url, inline=True)
+                        if repo_url[0] == None:
+                            embed.add_field(name="Highlighted epositories", value="Wow, such empty.", inline=True)
+                        else:
+                            for item in repo_url:
+                                embed.add_field(name="Highlighted repositories", value=item, inline=True)
                     except:
                         embed.add_field(name="Highlighted epositories", value="Wow, such empty.", inline=True)
 

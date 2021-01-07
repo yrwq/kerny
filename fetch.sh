@@ -24,6 +24,8 @@ while read -r line; do
     esac
 done <"${XDG_CONFIG_HOME:-$HOME/.config}/gtk-3.0/settings.ini"
 
+[ ! "$theme" ] && theme="unknown"
+
 # get wm/de
 wm="$XDG_CURRENT_DESKTOP"
 [ "$wm" ] || wm="$DESKTOP_SESSION"
@@ -70,9 +72,10 @@ term=$(
         -e " x*st$" \
         -e " tilda$"
 )
-
 # remove leading space
 term=${term# }
+
+[ ! "$term" ] && term="unknown"
 
 # Screen resolution
 unset i resolution
@@ -84,33 +87,18 @@ command -v xrandr >/dev/null && {
     resolution=${resolution%, }
 }
 
-bar=$(
-ps -e | grep -m 1 -o \
-    -e " i3bar$" \
-    -e " dzen2$" \
-    -e " tint2$" \
-    -e " xmobar$" \
-    -e " swaybar$" \
-    -e " polybar$" \
-    -e " lemonbar$" \
-    -e " taffybar$"
-)
-bar=${bar# }
+cat <<EOF
 
-cat << EOF > "fetch"
-Distro: $NAME
-Kernel: $(uname -sr)
-Terminal: $term
-Editor: ${EDITOR##*/}
-DE/WM: $wm
-Resolution: $resolution
-Display Protocol: $displayprot
-Theme: $theme
+Paste the following lines into a channel:
+
+sudo setfetch
+$NAME
+$(uname -r)
+$term
+${EDITOR##*/}
+$wm
+$resolution
+$displayprot
+$theme
+
 EOF
-
-id=$(curl -sf -F'file=@fetch' http://0x0.st)
-
-command -v xclip >/dev/null && {
-    echo -ne "sudo setfetch $id\tcopied to clipboard!\n"
-    echo "sudo setfetch $id" | xclip -sel clip
-} || echo "sudo setfetch $id\npaste this command in a channel!"
