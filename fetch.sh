@@ -87,6 +87,9 @@ command -v xrandr >/dev/null && {
     resolution=${resolution%, }
 }
 
+editor=${EDITOR##*/}
+[ ! $editor ] && editor="unknown"
+
 cat <<EOF
 
 Paste the following lines into a channel:
@@ -95,7 +98,7 @@ sudo setfetch
 $NAME
 $(uname -r)
 $term
-${EDITOR##*/}
+$editor
 $wm
 $resolution
 $displayprot
