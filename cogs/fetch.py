@@ -17,78 +17,48 @@ class Fetch(commands.Cog):
 
         user_id = str(ctx.author.id)
 
-        valid_link = "0x0.st/"
+        if not self.fetchers:
+            self.fetchers = {}
 
-        if not valid_link in user_input:
-            embed = discord.Embed(title="Setfetch", color=0xea6f91)
-            embed.add_field(name="Error", value="Please enter a valid url!", inline=False)
-            embed.add_field(name="Usage", value="For a list of valid urls and more information, type: sudo help setfetch", inline=False)
-            await ctx.send(embed=embed)
+        if not user_id in self.fetchers:
+            self.fetchers[user_id] = {}
+            self.fetchers[user_id]["fetchUrl"] = user_input
 
-        if valid_link in user_input:
-            if ctx.author == self.client.user:
-                return
+        with open("fetchers.json", "w") as f:
+            json.dump(self.fetchers, f, indent=4)
 
-            if not self.fetchers:
-                self.fetchers = {}
-
-            if not user_id in self.fetchers:
-                self.fetchers[user_id] = {}
-                self.fetchers[user_id]["fetchUrl"] = user_input
-
-            with open("fetchers.json", "w") as f:
-                json.dump(self.fetchers, f, indent=4)
-
-            embed = discord.Embed(title="Setfetch", color=0xea6f91)
-            embed.set_footer(text=f"{ctx.author} successfully set fetch!")
-            await ctx.send(embed=embed)
+        embed = discord.Embed(title="Setfetch", color=0xea6f91)
+        embed.set_footer(text=f"{ctx.author} successfully set fetch!")
+        await ctx.send(embed=embed)
 
     @commands.command()
-    async def fetchimg(self, ctx, user_input):
+    async def setimg(self, ctx, user_input):
 
         user_id = str(ctx.author.id)
 
-        valid_link = "0x0.st/"
+        if not self.fetchers:
+            self.fetchers = {}
 
-        if not valid_link in user_input:
-            embed = discord.Embed(title="Fetchimg", color=0xea6f91)
-            embed.add_field(name="Error", value="Please enter a valid url!", inline=False)
-            embed.add_field(name="Usage", value="For a list of valid urls and more information, type: sudo help setimg", inline=False)
-            await ctx.send(embed=embed)
+        if not user_id in self.fetchers:
+            self.fetchers[user_id] = {}
 
-        if valid_link in user_input:
-            if ctx.author == self.client.user:
-                return
+        if user_id in self.fetchers:
+            self.fetchers[user_id]["fetchImg"] = user_input
 
-            if not self.fetchers:
-                self.fetchers = {}
+        with open("fetchers.json", "w") as f:
+            json.dump(self.fetchers, f, indent=4)
 
-            if not user_id in self.fetchers:
-                self.fetchers[user_id] = {}
-
-            if user_id in self.fetchers:
-                self.fetchers[user_id]["fetchImg"] = user_input
-
-            with open("fetchers.json", "w") as f:
-                json.dump(self.fetchers, f, indent=4)
-
-            embed = discord.Embed(title="Fetchimg", color=0xea6f91)
-            embed.set_footer(text=f"{ctx.author} successfully set fetch image!")
-            await ctx.send(embed=embed)
+        embed = discord.Embed(title="Setimg", color=0xea6f91)
+        embed.set_footer(text=f"{ctx.author} successfully set fetch image!")
+        await ctx.send(embed=embed)
 
     @commands.command()
-    async def fetchrepo(self, ctx, user_input):
+    async def addrepo(self, ctx, user_input):
 
         user_id = str(ctx.author.id)
 
         valid_link = "https://github.com"
 
-        if not valid_link in user_input:
-            embed = discord.Embed(title="Fetchrepo", color=0xea6f91)
-            embed.add_field(name="Error", value="Please enter a valid url!", inline=False)
-            embed.add_field(name="Usage", value="For a list of valid urls and more information, type: sudo help fetchrepo", inline=False)
-            await ctx.send(embed=embed)
-
         if valid_link in user_input:
             if ctx.author == self.client.user:
                 return
@@ -100,7 +70,7 @@ class Fetch(commands.Cog):
                 self.fetchers[user_id] = {}
 
             if user_id in self.fetchers:
-                self.fetchers[user_id]["fetchRepo"] = user_input
+                repo = self.fetchers[user_id]["repos"] = user_input
 
             with open("fetchers.json", "w") as f:
                 json.dump(self.fetchers, f, indent=4)
@@ -155,7 +125,7 @@ class Fetch(commands.Cog):
                     embed.set_footer(text="Image not set")
 
                 try:
-                    repo_url = self.fetchers[fetcher_id]["fetchRepo"]
+                    repo_url = self.fetchers[fetcher_id]["repos"]
                     embed.add_field(name="Highlighted repositories", value=repo_url, inline=True)
                 except:
                     embed.add_field(name="Highlighted epositories", value="Wow, such empty.", inline=True)
@@ -198,7 +168,7 @@ class Fetch(commands.Cog):
                         embed.set_footer(text="Image not set")
 
                     try:
-                        repo_url = self.fetchers[user_id]["fetchRepo"]
+                        repo_url = self.fetchers[user_id]["repos"]
                         embed.add_field(name="Highlighted repositories", value=repo_url, inline=True)
                     except:
                         embed.add_field(name="Highlighted epositories", value="Wow, such empty.", inline=True)
