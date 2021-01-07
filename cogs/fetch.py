@@ -136,75 +136,78 @@ class Fetch(commands.Cog):
             await ctx.send(embed=embed)
             self.fetchers = {}
 
-        if not self.fetchers[fetcher_id]["fetchUrl"]:
-            embed = discord.Embed(title="Fetch", color=0xea6f91)
-            embed.set_footer(text=f"{fetcher} didn't set a fetch yet!")
-            await ctx.send(embed=embed)
+        try:
+            if self.fetchers[fetcher_id]:
 
-        if self.fetchers[fetcher_id]:
+                embed = discord.Embed(title="Fetch", color=0xea6f91)
 
-
-            if self.fetchers[fetcher_id]["fetchUrl"]:
                 try:
-                    fetch_url = self.fetchers[user_id]["fetchUrl"]
+                    fetch_url = self.fetchers[fetcher_id]["fetchUrl"]
                     fetch = requests.get(fetch_url)
+                    embed.add_field(name="Information", value=fetch.text, inline=True)
                 except:
-                    embed = discord.Embed(title="Fetch", color=0xea6f91)
-                    embed.set_footer(text=f"Couldn't get {fetcher}'s fetch!")
-                    await ctx.send(embed=embed)
-
-            if self.fetchers[fetcher_id]["fetchImg"]:
+                    embed.add_field(name="Information", value="Wow, such empty.", inline=True)
 
                 try:
-                    img_url = self.fetchers[user_id]["fetchImg"]
-
+                    img_url = self.fetchers[fetcher_id]["fetchImg"]
+                    embed.set_image(url=img_url)
                 except:
-                    embed = discord.Embed(title="Fetch", color=0xea6f91)
-                    embed.set_footer(text=f"Couldn't get {fetcher}'s fetch image!")
-
-            if self.fetchers[fetcher_id]["fetchRepo"]:
+                    embed.set_footer(text="Image not set")
 
                 try:
-                    repo_url = self.fetchers[user_id]["fetchRepo"]
-
+                    repo_url = self.fetchers[fetcher_id]["fetchRepo"]
+                    embed.add_field(name="Highlighted repositories", value=repo_url, inline=True)
                 except:
-                    embed = discord.Embed(title="Fetch", color=0xea6f91)
-                    embed.set_footer(text=f"Couldn't get {fetcher}'s fetch repository!")
+                    embed.add_field(name="Highlighted epositories", value="Wow, such empty.", inline=True)
 
+                await ctx.send(embed=embed)
+        except:
             embed = discord.Embed(title="Fetch", color=0xea6f91)
-            embed.set_image(url=img_url)
-            embed.add_field(name="Information", value=fetch.text, inline=True)
-            embed.add_field(name="Repository", value=repo_url, inline=True)
+            embed.set_footer(text="Wow, such emtpy!")
             await ctx.send(embed=embed)
+
 
     @fetch.error
     async def fetch_error(self, ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
+
             user_id = str(ctx.author.id)
 
-            try:
-                fetch_url = self.fetchers[user_id]["fetchUrl"]
-                fetch = requests.get(fetch_url)
+            if not self.fetchers:
                 embed = discord.Embed(title="Fetch", color=0xea6f91)
-                embed.set_footer(text=f"{fetch.text}")
+                embed.set_footer(text="No one set a fetch yet!")
                 await ctx.send(embed=embed)
+                self.fetchers = {}
 
+            try:
+                if self.fetchers[user_id]:
+
+                    embed = discord.Embed(title="Fetch", color=0xea6f91)
+
+                    try:
+                        fetch_url = self.fetchers[user_id]["fetchUrl"]
+                        fetch = requests.get(fetch_url)
+                        embed.add_field(name="Information", value=fetch.text, inline=True)
+                    except:
+                        embed.add_field(name="Information", value="Wow, such empty.", inline=True)
+
+                    try:
+                        img_url = self.fetchers[user_id]["fetchImg"]
+                        embed.set_image(url=img_url)
+                    except:
+                        embed.set_footer(text="Image not set")
+
+                    try:
+                        repo_url = self.fetchers[user_id]["fetchRepo"]
+                        embed.add_field(name="Highlighted repositories", value=repo_url, inline=True)
+                    except:
+                        embed.add_field(name="Highlighted epositories", value="Wow, such empty.", inline=True)
+
+                    await ctx.send(embed=embed)
             except:
-                if not self.fetchers:
-                    embed = discord.Embed(title="Fetch", color=0xea6f91)
-                    embed.set_footer(text="No one set a fetch yet!")
-                    await ctx.send(embed=embed)
-                    self.fetchers = {}
-
-                if not user_id in self.fetchers:
-                    embed = discord.Embed(title="Fetch", color=0xea6f91)
-                    embed.set_footer(text="You didn't set a fetch yet!")
-                    await ctx.send(embed=embed)
-
-                else:
-                    embed = discord.Embed(title="Fetch", color=0xea6f91)
-                    embed.set_footer(text=f"Couldn't get your fetch!")
-                    await ctx.send(embed=embed)
+                embed = discord.Embed(title="Fetch", color=0xea6f91)
+                embed.set_footer(text="Wow, such emtpy!")
+                await ctx.send(embed=embed)
 
 def setup(client):
     client.add_cog(Fetch(client))

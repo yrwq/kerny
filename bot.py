@@ -10,30 +10,28 @@ devs = ["yrwq#5792", "Dempy#0053"]
 TOKEN_AUTH = os.environ.get("DISCORD_TOKEN")
 # TOKEN_AUTH = "token"
 
-client = commands.Bot(command_prefix='sudo ')
+client = commands.Bot(command_prefix="sudo ")
 client.remove_command("help")
 
 @client.event
 async def on_ready():
 
-    print("\nLogged in ...")
-    print(client.user.name)
-    print("\n")
+    print(f"{client.user.name} logged in ...")
 
-    # await client.change_presence(activity=discord.Game(name='with Arch Linux'))
+    await client.change_presence(activity=discord.Game(name="https://github.com/yrwq/kerny"))
 
-    for filename in os.listdir('./cogs'):
-        if filename.endswith('.py'):
-            client.load_extension(f'cogs.{filename[:-3]}')
+    for filename in os.listdir("./cogs"):
+        if filename.endswith(".py"):
+            client.load_extension(f"cogs.{filename[:-3]}")
             print("Loaded: {}".format(filename))
 
 @client.command()
 async def load(ctx, extension):
     if str(ctx.message.author) in devs:
 
-        if path.exists(f'cogs/{extension}.py'):
+        if path.exists(f"cogs/{extension}.py"):
 
-            client.load_extension(f'cogs.{extension}')
+            client.load_extension(f"cogs.{extension}")
             await ctx.message.add_reaction("🤍")
 
             embed = discord.Embed(title=f"{extension} loaded! 🤍", color=0x9bced7)
@@ -52,7 +50,7 @@ async def load(ctx, extension):
 async def unload(ctx, extension):
     if str(ctx.message.author) in devs:
 
-        client.unload_extension(f'cogs.{extension}')
+        client.unload_extension(f"cogs.{extension}")
         await ctx.message.add_reaction("💔")
 
         embed = discord.Embed(title=f"{extension} unloaded! 💔", color=0x34738e)
