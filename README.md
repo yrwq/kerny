@@ -10,10 +10,9 @@ Kerny is just another Discord bot ... Written in python, for your shitty discord
 
 ## Features
 
-- [x] Set a fetch(like neofetch but with a file hosting)
-- [x] Clear your fetch
-- [x] Show your or another user's fetch
-- [x] Get a random wallpaper from [unsplash](https://unsplash.com)
+- [x] Fetch (like neofetch but inside discord)
+- [x] Wallpaper (random wallpaper from unslash, using queries)
+- [x] Music (play songs from youtube, using youtubedl)
 
 ## Usage
 
