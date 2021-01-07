@@ -85,8 +85,7 @@ async def reload(ctx, extension):
 @client.event
 async def on_command_error(ctx, error):
     if isinstance(error, CommandNotFound):
-        embed = discord.Embed(title="Command not found! 💔", color=0xea6f91)
-        embed.set_footer(text="For available commands, type: sudo help")
+        embed = discord.Embed(title="Command not found! 💔", description="run: `sudo help` to get all available commands.", color=0xea6f91)
         await ctx.send(embed=embed)
 
 client.run(TOKEN_AUTH)
