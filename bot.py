@@ -17,7 +17,6 @@ client.remove_command("help")
 async def on_ready():
 
     print(f"{client.user.name} logged in ...")
-
     await client.change_presence(activity=discord.Game(name="https://github.com/yrwq/kerny"))
 
     for filename in os.listdir("./cogs"):

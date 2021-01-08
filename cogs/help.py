@@ -1,7 +1,6 @@
 import discord
-import os
-import asyncio
 from discord.ext import commands
+
 
 class Help(commands.Cog):
     def __init__(self, client):
@@ -115,6 +114,7 @@ class Help(commands.Cog):
             embed.add_field(name=">", value=f"run: `{ctx.prefix}help <command>` to get more information.")
 
             await ctx.send(embed=embed)
+
 
 def setup(client):
     client.add_cog(Help(client))

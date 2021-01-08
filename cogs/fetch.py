@@ -1,9 +1,8 @@
 import discord
-import requests
 import json
-import os
 import asyncio
 from discord.ext import commands
+
 
 class Fetch(commands.Cog):
     def __init__(self, client):
@@ -31,7 +30,7 @@ class Fetch(commands.Cog):
         display_prot = fetch[6]
         gtk_theme = fetch[7]
 
-        if not user_id in self.fetchers:
+        if user_id not in self.fetchers:
             self.fetchers[user_id] = {}
             self.fetchers[user_id]["repos"] = []
         else:
@@ -167,7 +166,6 @@ class Fetch(commands.Cog):
 
         await ctx.send(embed=embed)
 
-
     @fetch.error
     async def fetch_error(self, ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
@@ -218,6 +216,7 @@ class Fetch(commands.Cog):
                 print(f"{user_id} don't have any repositories")
 
             await ctx.send(embed=embed)
+
 
 def setup(client):
     client.add_cog(Fetch(client))

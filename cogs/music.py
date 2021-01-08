@@ -1,7 +1,6 @@
 import asyncio
 import discord
 import youtube_dl
-from discord.utils import get
 from discord.ext import commands
 
 youtube_dl.utils.bug_reports_message = lambda: ''
@@ -25,6 +24,7 @@ ffmpeg_options = {
 }
 
 ytdl = youtube_dl.YoutubeDL(ytdl_format_options)
+
 
 class YTDLSource(discord.PCMVolumeTransformer):
     def __init__(self, source, *, data, volume=0.5):
@@ -116,5 +116,6 @@ class Music(commands.Cog):
         elif ctx.voice_client.is_playing():
             ctx.voice_client.stop()
 
+
 def setup(client):
-	client.add_cog(Music(client))
+    client.add_cog(Music(client))
