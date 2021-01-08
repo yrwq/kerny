@@ -7,6 +7,7 @@ from os import path
 
 devs = ["yrwq#5792", "Dempy#0053"]
 
+
 TOKEN_AUTH = os.environ.get("DISCORD_TOKEN")
 # TOKEN_AUTH = "token"
 
