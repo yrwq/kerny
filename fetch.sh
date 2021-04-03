@@ -26,6 +26,11 @@ done <"${XDG_CONFIG_HOME:-$HOME/.config}/gtk-3.0/settings.ini"
 
 [ ! "$theme" ] && theme="unknown"
 
+# get disk
+disk_used="$(df -h | grep '/dev/sdb1' | awk '{print $3}')"
+disk_total="$(df -h | grep '/dev/sdb1' | awk '{print $2}')"
+disk="${disk_total} / ${disk_used}"
+
 # get wm/de
 wm="$XDG_CURRENT_DESKTOP"
 [ "$wm" ] || wm="$DESKTOP_SESSION"
@@ -91,7 +96,6 @@ editor=${EDITOR##*/}
 [ ! $editor ] && editor="unknown"
 
 cat <<EOF
-
 Paste the following lines into a channel:
 
 sudo setfetch
@@ -103,5 +107,5 @@ $wm
 $resolution
 $displayprot
 $theme
-
+$disk
 EOF

@@ -1,6 +1,0 @@
-discord
-bs4
-requests
-pynacl
-youtube-dl
-pyunsplash
